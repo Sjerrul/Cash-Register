@@ -1,0 +1,94 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>TEST</title>
+
+<link rel="stylesheet" type="text/css" href="metro-bootstrap.css" />
+<link rel="stylesheet" type="text/css" href="styles.css" />
+<link rel="stylesheet" type="text/css" href="print.css" media="print" />
+   
+<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script src="http://code.jquery.com/jquery-migrate-1.1.1.min.js"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/knockout/knockout-2.2.1.js"></script>
+
+</head>
+
+<body>
+<div class="container">
+	<section id="TableOverview">
+		<h1>Tafels <small>Aanwezige tafels</small></h1>
+		<div class="row">	
+			<ul id="Tables" class="thumbnails">
+				<!-- ko foreach: tables -->
+				<li class="span3 tile tile-teal" data-bind="click: setActive, css: {active: isActive()}">
+					<h1 data-bind="text: number" ></h1>		
+					<h2>&euro; <span data-bind="text: totalPrice" ></span></h2>
+				</li>			
+				<!-- /ko -->
+			</ul>
+		</div>
+	</section>
+	
+	<section data-bind="if: activeTable() != undefined" id="OrderBox">
+		<h1>Tafel <span data-bind="text: activeTable().number"></span><small>overzicht</small></h1>
+		<div class="row">
+			<div class="span6" id="CartLines">	
+				<table class="table">
+				  <thead>
+					<tr>
+					  <th>Aantal</th>
+					  <th>Product</th>
+					  <th>Prijs</th>
+					  <th></th>
+					</tr>
+				  </thead>
+				  <tbody>
+					<!-- ko foreach: activeTable().cartLines -->
+					<tr >
+					  <td data-bind="text: amount()"></td>
+					  <td><span data-bind="text: product().name"></span> (&euro; <span data-bind="text: product().price"></span>)</td>
+					  <td>&euro; <span data-bind="text: price()"></span></td>
+					  
+					  <td>
+						<button class="btn btn-success" data-bind="click: increaseOne">+1</button>
+						<button class="btn btn-warning" data-bind="click: decreaseOne">-1</button>
+						<button class="btn btn-danger" data-bind="click: removeLine">X</button>
+					  </td>
+					</tr>
+					<!-- /ko -->
+					<tr id="Total">
+					  <td colspan="2" >Totaal</td>				  
+					  <td>&euro; <span data-bind="text: activeTable().totalPrice()"></span></td>
+					  <td></td>	
+					</tr>
+				  </tbody>
+				</table>
+			</div>
+			<div class="span6" data-bind="if: activeTable() != undefined"  id="Products">
+				<ul class="thumbnails">
+					<!-- ko foreach: products -->
+					<li class="span3 tile tile-teal" data-bind="click: addToTable" >
+						<h1><span data-bind="text: name" ></span></h1>
+						<h3>&euro; <span data-bind="text: price" ></span></h3>
+					</li>	
+					<!-- /ko -->
+				</ul>
+			</div>
+		</div>	
+	</section>
+	
+	<section data-bind="if: activeTable() != undefined" id="Actions">
+		<div class="row">	
+			<button data-bind="visible: activeTable().totalPrice() > 0, click: activeTable().pay">Betaal</button>
+			<button data-bind="visible: activeTable().totalPrice() > 0, click: activeTable().print">Print</button>
+		</div>
+	</section>
+	
+</div>
+
+<!-- JavaScript -->
+<script src="knockout.localstorage.js"></script>
+<script src="main.js"></script>   
+
+</body>
+</html>
